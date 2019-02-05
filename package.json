@@ -1,0 +1,32 @@
+{
+  "name": "prosciutto",
+  "version": "1.0.0",
+  "description": "Promise based redux side effects",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src -d dist"
+  },
+  "repository": "https://github.com/rametta/prosciutto.git",
+  "bugs": {
+    "url": "https://github.com/rametta/prosciutto/issues"
+  },
+  "homepage": "https://github.com/rametta/prosciutto#readme",
+  "author": "Jason Rametta",
+  "license": "apache-2.0",
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "eslint": "^5.13.0"
+  },
+  "keywords": [
+    "redux",
+    "side effects",
+    "promise",
+    "middleware",
+    "epics",
+    "io",
+    "small",
+    "fast"
+  ]
+}
