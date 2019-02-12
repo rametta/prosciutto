@@ -1,6 +1,6 @@
 {
   "name": "prosciutto",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Functor based redux side effects",
   "main": "dist/index.js",
   "scripts": {
