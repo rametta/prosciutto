@@ -5,7 +5,7 @@
 
 # 🥓 Prosciutto
 
-> [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) based redux side effects
+> [Functor](https://en.wikipedia.org/wiki/Functor) based redux side effects
 
 *Alternative to rxjs and redux-observable, or [meaball](https://www.npmjs.com/package/meatball)*
 
@@ -15,27 +15,25 @@ yarn add prosciutto
 ```
 
 ## Usage examples
-Listen to any redux action, perform side effect, return a new redux action to be fired
+Listen to any redux action, perform side effect, dispatch new redux actions
 ```js
 // epics.js
-import { searchRes, searchErr } from './reducer'
+import { searchResponse, seachError, clearSidebar } from './reducer'
 
 // Simple example
-const simpleEpic = {
-  type: 'SUBMIT_SEARCH', // listen for this action
-  do: ({ payload }) => fetch(payload) // fetch async data
+const simpleEpic = is => is('SUBMIT_SEARCH')
+  .map(({payload, store, dispatch}) => fetch(payload)
     .then(res => res.json())
-    .then(data => searchRes(data)) // redux action to save data
-    .catch(e => searchErr(e)) // redux action for handling error
-}
+    .then(json => dispatch(searchResponse(json)))
+    .catch(e => dispatch(seachError(e))))
 
-// Return multiple actions with an array
-const multipleEpic = {
-  type: 'SUBMIT_SEARCH', // listen for this action
-  do: ({ payload }) => fetch(payload) // fetch async data
+// Dispatch multiple actions with an array
+const multipleEpic = is => is('SUBMIT_SEARCH')
+  .map(({payload, store, dispatch}) => fetch(payload)
     .then(res => res.json())
-    .then(data => [searchRes(data), clearSidebar()]) // multiple actions
-}
+    .then(json => dispatch([searchResponse(json), clearSidebar()]))
+    .catch(e => dispatch(seachError(e)))
+  )
 
 export default [simpleEpic, multipleEpic]
 

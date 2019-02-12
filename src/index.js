@@ -16,10 +16,23 @@ const dispatcher = dispatch => actions => {
   }
 }
 
-// filterEpic :: Action -> Epic[]|Epic -> Boolean
-const filterEpic = action => epic => epic.type.constructor === Array 
-  ? epic.type.indexOf(action.type) > -1
-  : epic.type === action.type
+const isListening = (currentActionType, epicActionType) => epicActionType.constructor === Array 
+  ? epicActionType.indexOf(currentActionType) > -1
+  : epicActionType === currentActionType
+
+const Some = () => ({
+  map: () => Some(),
+  inspect: () => `Some()`
+})
+
+const None = x => ({
+  map: cb => None(cb(x)),
+  inspect: () => `None(${x})`
+})
+
+const is = params => currentActionType => epicActionType => isListening(currentActionType, epicActionType)
+  ? Some(params)
+  : None()
 
 // prosciutto :: Epic[] -> Store -> Next -> Action -> IO
 const prosciutto = epics => {
@@ -32,10 +45,8 @@ const prosciutto = epics => {
     const result = next(action)
     const postActionState = store.getState()
     const actioner = dispatcher(store.dispatch)
-
-    epics
-      .filter(filterEpic(action))
-      .forEach(epic => epic.do(result, postActionState).then(actioner).catch(actioner))
+    const epicker = is({ payload: result, store: postActionState, dispatch: actioner })(action.type)
+    epics.forEach(epicker)
   }
 }
 
