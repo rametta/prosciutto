@@ -20,19 +20,19 @@ const isListening = (currentActionType, epicActionType) => epicActionType.constr
   ? epicActionType.indexOf(currentActionType) > -1
   : epicActionType === currentActionType
 
-const Some = () => ({
-  map: () => Some(),
-  inspect: () => `Some()`
+const None = ({
+  map: () => None,
+  inspect: () => `None`
 })
 
-const None = x => ({
-  map: cb => None(cb(x)),
-  inspect: () => `None(${x})`
+const Some = x => ({
+  map: cb => Some(cb(x)),
+  inspect: () => `Some(${x})`
 })
 
 const is = params => currentActionType => epicActionType => isListening(currentActionType, epicActionType)
   ? Some(params)
-  : None()
+  : None
 
 // prosciutto :: Epic[] -> Store -> Next -> Action -> IO
 const prosciutto = epics => {
@@ -41,7 +41,6 @@ const prosciutto = epics => {
   }
 
   return store => next => action => {
-
     const result = next(action)
     const postActionState = store.getState()
     const actioner = dispatcher(store.dispatch)
