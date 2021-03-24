@@ -45,7 +45,7 @@ const prosciutto = epics => {
     const postActionState = store.getState()
     const actioner = dispatcher(store.dispatch)
     const epicker = is({ payload: result, store: postActionState, dispatch: actioner })(action.type)
-    epics.forEach(epicker)
+    epics.forEach(e => e(epicker))
   }
 }
 
